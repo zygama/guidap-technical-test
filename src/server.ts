@@ -2,7 +2,8 @@ import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import express from 'express';
 import Routes from './routes';
-import { Bootstrap } from './bootstrap';
+import { HobbyClub } from './entity/HobbyClub';
+// import { Bootstrap } from './bootstrap';
 
 createConnection().then(async (connection) => {
     const app = express();
