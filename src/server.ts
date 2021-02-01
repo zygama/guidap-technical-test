@@ -4,7 +4,7 @@ import express from 'express';
 import Routes from './routes';
 
 // import { HobbyClub } from './entity/HobbyClub';
-// import { Bootstrap } from './bootstrap';
+import { Bootstrap } from './bootstrap';
 
 createConnection().then(async (connection) => {
     const app = express();

@@ -39,7 +39,7 @@ export const Bootstrap = async () => {
     const hobbyClub = hobbyClubRepo.create({
         name: 'Lac sesquierres 4',
         description: 'la description 3',
-        address: '45 rue baqué',
+        address: '28 rue baqué, 31200 toulouse',
         website: 'http://lacsesquieres3.com',
         activities: [activity1, activity2]
     });

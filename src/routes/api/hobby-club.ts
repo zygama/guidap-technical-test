@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { UpdateResult } from 'typeorm';
 import { HobbyClubController } from '../../controller/HobbyClubController';
+import mapboxService from '../../service/mapbox';
 
 const routes = Router();
 // const hobbyClubController = new HobbyClubController();
@@ -27,6 +28,24 @@ routes.get('/:id', async (req: Request, res: Response) => {
         }
     } catch (err) {
         res.status(500).send(err);
+    }
+});
+
+routes.get('/with-weather/:id', async (req: Request, res: Response) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        const hobbyClubById = await HobbyClubController.findOne(id);
+
+        if (!hobbyClubById) {
+            res.status(404).send({ message: 'Hobby club was not found' });
+        } else {
+            // Get [lat,lon] for this hobby club
+            const hobbyClubCoordinates = await mapboxService.getLatLonFromAddress(hobbyClubById.address);
+
+            res.status(200).send(hobbyClubCoordinates);
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
 
