@@ -5,9 +5,21 @@ const routes = Router();
 // const ActivityController = new ActivityController();
 
 routes.get('/', async (req: Request, res: Response) => {
-    // const results = (await ActivityController.getAll()).map((activity) => activity.name);
-    const results = await ActivityController.getAll();
-    return res.send(results);
+    try {
+        const results = await ActivityController.getAll();
+        res.status(200).send(results);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+routes.get('/names', async (req: Request, res: Response) => {
+    try {
+        const results = (await ActivityController.getAll()).map((activity) => activity.name);
+        res.status(200).send(results);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 export default routes;

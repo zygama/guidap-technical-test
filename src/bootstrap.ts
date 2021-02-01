@@ -11,12 +11,12 @@ export const Bootstrap = async () => {
     await activityRepo.save(activity1).catch((err) => {
         console.log(err);
     });
-    // const activity2 = activityRepo.create({
-    //     name: 'Escalade'
-    // });
-    // await activityRepo.save(activity2).catch((err) => {
-    //     console.log(err);
-    // });
+    const activity2 = activityRepo.create({
+        name: 'Escalade'
+    });
+    await activityRepo.save(activity2).catch((err) => {
+        console.log(err);
+    });
 
     // const activities = await getRepository(Activity)
     //     .createQueryBuilder()
@@ -41,7 +41,7 @@ export const Bootstrap = async () => {
         description: 'la description 3',
         address: '45 rue baqué',
         website: 'http://lacsesquieres3.com',
-        activities: [{ id: 5 }]
+        activities: [activity1, activity2]
     });
     await hobbyClubRepo.save(hobbyClub).catch((err) => {
         console.log(err);

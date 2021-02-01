@@ -20,7 +20,7 @@ export class HobbyClub {
     @Column({ nullable: true })
     website: string;
 
-    @ManyToMany(() => Activity)
+    @ManyToMany(() => Activity, { cascade: true })
     @JoinTable({ name: 'hobby_club_activities' })
-    activities: Activity[];
+    activities: Activity[] | string[];
 }
