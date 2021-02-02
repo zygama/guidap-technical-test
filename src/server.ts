@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import express from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 import Routes from './routes';
 
 // import { Bootstrap } from './bootstrap';
@@ -11,6 +12,9 @@ createConnection().then(async () => {
 
     // Secure api
     app.use(helmet());
+
+    // Enable CORS to test api with OpenApi and Swagger for example
+    // app.use(cors());
 
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));

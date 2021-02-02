@@ -321,11 +321,6 @@ components:
         description: 
           type: string
 
-    # Weather:
-    #   properties:
-    #     weather: 
-    #       $ref: '#/components/schemas/WeatherData'
-
         
         
         
