@@ -4,7 +4,6 @@ import { Coordinates, Weather } from '../types';
 const openWeatherUrl = 'https://api.openweathermap.org/data/2.5/onecall';
 const exclude = 'minutely,hourly,daily,alerts';
 
-// const getLatLonFromAddress = async (addressCoordinates: Coordinates): Promise<Coordinates> => {
 const getWeatherFromCoordinates = async (addressCoordinates: Coordinates): Promise<Weather> => {
     try {
         const response = await axios.get(`${openWeatherUrl}`, {

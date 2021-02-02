@@ -4,11 +4,12 @@ import { Activity } from '../entity/Activity';
 import { HobbyClub } from '../entity/HobbyClub';
 import { ActivityController } from './ActivityController';
 
-export class HobbyClubController {
-    // static hobbyClubRepository = getRepository(HobbyClub);
+const defaultSkip = 0;
+const defaultTake = 10;
 
-    static async getAll() {
-        const results = await getRepository(HobbyClub).find({ relations: ['activities'] });
+export class HobbyClubController {
+    static async getAll(skip: number = defaultSkip, take: number = defaultTake) {
+        const results = await getRepository(HobbyClub).find({ relations: ['activities'], skip, take });
 
         return results;
     }
@@ -17,6 +18,20 @@ export class HobbyClubController {
         const results = await getRepository(HobbyClub).find({ where: { id }, relations: ['activities'] });
 
         return results[0];
+    }
+
+    static async findByActivity(activityName: string, skip: number = defaultSkip, take: number = defaultTake) {
+        const formattedActivityName = activityName[0].toUpperCase() + activityName.toLowerCase().slice(1);
+
+        const results = await getRepository(HobbyClub)
+            .createQueryBuilder('hobby_club')
+            .innerJoinAndSelect('hobby_club.activities', 'activity')
+            .where('activity.name = :activityName', { activityName: formattedActivityName })
+            .skip(skip)
+            .take(take)
+            .getMany();
+
+        return results;
     }
 
     static async save(hobbyClubData: HobbyClub) {

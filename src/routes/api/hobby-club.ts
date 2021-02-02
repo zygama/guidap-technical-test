@@ -1,27 +1,45 @@
 import { Request, Response, Router } from 'express';
 import { UpdateResult } from 'typeorm';
 import { HobbyClubController } from '../../controller/HobbyClubController';
+import { HobbyClub } from '../../entity/HobbyClub';
 import mapboxService from '../../service/mapbox';
 import openWeatherService from '../../service/open-weather';
 import { HobbyClubWithWeather } from '../../types';
 
 const routes = Router();
-// const hobbyClubController = new HobbyClubController();
 
 routes.get('/', async (req: Request, res: Response) => {
     try {
-        const hobbyClubs = await HobbyClubController.getAll();
+        const { skip, limit } = req.query;
+        const hobbyClubs = await HobbyClubController.getAll(
+            parseInt(skip as string, 10),
+            parseInt(limit as string, 10)
+        );
 
-        res.status(200).send(hobbyClubs);
+        res.status(200).send({
+            data: hobbyClubs,
+            count: hobbyClubs.length
+        });
     } catch (err) {
         res.status(500).send(err);
     }
 });
 
-routes.get('/with-weather', async (req: Request, res: Response) => {
+routes.get('/with-weather/:activity?', async (req: Request, res: Response) => {
+    // Param :activity? is optionnal here so we can also get all hobby clubs with weather
     try {
         const hobbyClubsWithWeather: HobbyClubWithWeather[] = [];
-        const hobbyClubs = await HobbyClubController.getAll();
+        let hobbyClubs: HobbyClub[] = null;
+        const skip = parseInt(req.query.skip as string, 10);
+        const limit = parseInt(req.query.limit as string, 10);
+
+        if (req.params.activity) {
+            hobbyClubs = await HobbyClubController.findByActivity(
+                req.params.activity,
+                skip,
+                limit
+            );
+        } else hobbyClubs = await HobbyClubController.getAll(skip, limit);
 
         for (const hobbyClub of hobbyClubs) {
             // Get [lat,lon] coordinates for this hobby club
@@ -32,7 +50,10 @@ routes.get('/with-weather', async (req: Request, res: Response) => {
             hobbyClubsWithWeather.push({ ...hobbyClub, weather: { ...hobbyClubWeather } });
         }
 
-        res.status(200).send(hobbyClubsWithWeather);
+        res.status(200).send({
+            data: hobbyClubsWithWeather,
+            count: hobbyClubsWithWeather.length
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

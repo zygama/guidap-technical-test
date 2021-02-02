@@ -3,7 +3,7 @@ import { Coordinates } from '../types';
 
 const mapboxUrl = 'https://api.mapbox.com/geocoding/v5';
 
-const getLatLonFromAddress = async (address): Promise<Coordinates> => {
+const getLatLonFromAddress = async (address: string): Promise<Coordinates> => {
     try {
         const response = await axios.get(`${mapboxUrl}/mapbox.places/${address}.json`, {
             params: {

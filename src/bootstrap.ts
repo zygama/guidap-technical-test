@@ -3,48 +3,93 @@ import { HobbyClub } from './entity/HobbyClub';
 import { Activity } from './entity/Activity';
 
 export const Bootstrap = async () => {
-    // Create activities
+    // ======
+    // ====== Create activities ======
+    // ======
     const activityRepo = getRepository(Activity);
-    const activity1 = activityRepo.create({
-        name: 'Accrobranche'
+    // ==> Wakeboard
+    const activityWakeboard = activityRepo.create({
+        name: 'Wakeboard'
     });
-    await activityRepo.save(activity1).catch((err) => {
+    await activityRepo.save(activityWakeboard).catch((err) => {
         console.log(err);
     });
-    const activity2 = activityRepo.create({
-        name: 'Escalade'
+    // ==> SkiNautique
+    const activitySkiNautique = activityRepo.create({
+        name: 'Ski nautique'
     });
-    await activityRepo.save(activity2).catch((err) => {
+    await activityRepo.save(activitySkiNautique).catch((err) => {
+        console.log(err);
+    });
+    // ==> Kitesurf
+    const activityKitesurf = activityRepo.create({
+        name: 'Kitesurf'
+    });
+    await activityRepo.save(activityKitesurf).catch((err) => {
+        console.log(err);
+    });
+    // ==> Canoe
+    const activityCanoe = activityRepo.create({
+        name: 'Canoe'
+    });
+    await activityRepo.save(activityCanoe).catch((err) => {
+        console.log(err);
+    });
+    // ==> Parapente
+    const activityParapente = activityRepo.create({
+        name: 'Parapente'
+    });
+    await activityRepo.save(activityParapente).catch((err) => {
         console.log(err);
     });
 
-    // const activities = await getRepository(Activity)
-    //     .createQueryBuilder()
-    //     .insert()
-    //     .into(Activity)
-    //     .values([
-    //         { name: 'Kitesurf' },
-    //         { name: 'Karting' }
-    //     ])
-    //     .execute();
-
-    // const test = await getRepository(HobbyClub)
-    //     .createQueryBuilder('hobby_club')
-    //     .leftJoinAndSelect('hobby_club.activities', 'Kitesurf')
-    //     .getMany();
-    // console.log(test[0].activities);
-
-    // Create hobby clubs
+    // ======
+    // ====== Create hobby clubs ======
+    // ======
     const hobbyClubRepo = getRepository(HobbyClub);
-    const hobbyClub = hobbyClubRepo.create({
-        name: 'Lac sesquierres 4',
-        description: 'la description 3',
-        address: '28 rue baqué, 31200 toulouse',
-        website: 'http://lacsesquieres3.com',
-        activities: [activity1, activity2]
+
+    // ==> 1: Base de Loisirs Sesquières
+    let hobbyClub = hobbyClubRepo.create({
+        name: 'Base de Loisirs Sesquières',
+        description: 'Base de Loisirs Sesquières description',
+        address: 'Allée des Foulques, 31200 toulouse',
+        website: 'https://www.wampark.fr/toulouse-sesquieres/',
+        activities: [activityWakeboard, activitySkiNautique]
     });
     await hobbyClubRepo.save(hobbyClub).catch((err) => {
         console.log(err);
     });
-    console.log('Saved a new hobby club', hobbyClub);
+    // ==> 2: Akila Gruissan
+    hobbyClub = hobbyClubRepo.create({
+        name: 'Akila Gruissan',
+        description: 'Akila Gruissan description',
+        address: '50 avenue de la jetée, 11430 Gruissan',
+        website: 'https://www.akila-centers.com/',
+        activities: [activityKitesurf]
+    });
+    await hobbyClubRepo.save(hobbyClub).catch((err) => {
+        console.log(err);
+    });
+    // ==> 3: Canoe 31
+    hobbyClub = hobbyClubRepo.create({
+        name: 'Canoe 31',
+        description: 'Canoe 31 description',
+        address: 'Chemin de Catcharry, 31150 Gagnac',
+        website: 'https://canoe31.fr/fr',
+        activities: [activityCanoe]
+    });
+    await hobbyClubRepo.save(hobbyClub).catch((err) => {
+        console.log(err);
+    });
+    // ==> 4: Kymaya
+    hobbyClub = hobbyClubRepo.create({
+        name: 'Kymaya',
+        description: 'Kymaya description',
+        address: '3 Chemin de Rouy, 09400 Mercus-Garrabet',
+        website: 'https://www.kymaya.com/',
+        activities: [activityParapente]
+    });
+    await hobbyClubRepo.save(hobbyClub).catch((err) => {
+        console.log(err);
+    });
 };
