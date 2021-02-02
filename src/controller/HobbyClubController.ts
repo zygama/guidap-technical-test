@@ -67,12 +67,13 @@ export class HobbyClubController {
     static async update(id: number, updateData: QueryDeepPartialEntity<HobbyClub>) {
         const newHobbyClub = await getRepository(HobbyClub).update(id, updateData);
 
-        return newHobbyClub;
+        return newHobbyClub.affected > 0;
     }
 
     static async delete(id: number) {
         const newHobbyClub = await getRepository(HobbyClub).delete(id);
+        console.log(newHobbyClub);
 
-        return newHobbyClub;
+        return newHobbyClub.affected > 0;
     }
 }

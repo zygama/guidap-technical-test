@@ -1,0 +1,332 @@
+openapi: '3.0.2'
+
+info:
+  title: Guidap API
+  version: '1.0'
+
+servers:
+  - url: http://localhost:4000/api
+  
+paths:
+  /hobby-club:
+    get:
+      summary: Get all hobby clubs
+      description: Returns all hobby clubs paginated (ten by ten by default)
+      operationId: getAllHobbyClubs
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HobbyClub'
+        500:
+          description: Internal server error
+          content: {}
+    
+    post:
+      summary: "Add a new hobby club to the database"
+      description: "Add a new hobby club to the database"
+      operationId: "addHobbyClub"
+      requestBody:
+        description: Hobby club structure to add to database
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HobbyClubPost'
+
+      responses:
+        201:
+          description: Successful operation (hobby club created)
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HobbyClub'
+        500:
+          description: Internal server error
+          content: {}
+
+  /hobby-club/with-weather:
+    get:
+      summary: Get all hobby clubs with weather
+      description: Returns all hobby clubs paginated (ten by ten by default) with weather
+      operationId: getHobbyClubsWithWeather
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HobbyClubWithWeatherPaginated'
+        500:
+          description: Internal server error
+          content: {}
+
+  /hobby-club/with-weather/{activity}:
+    get:
+      summary: Get all hobby clubs with weather potentially filtered by activity
+      description: Returns all hobby clubs paginated (ten by ten by default) with weather filtered by potential activity param
+      operationId: getHobbyClubsWithWeatherFilteredByActivity
+      parameters:
+        - name: "activity"
+          required: true # can't set to false so i have to create another endpoint to handle it
+          in: "path"
+          description: "Activity to filter by"
+          schema:
+            type: "string"
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HobbyClubWithWeatherPaginated'
+        500:
+          description: Internal server error
+          content: {}
+
+  /hobby-club/{id}:
+    get:
+      summary: Find hobby club by id
+      description: Returns a single hobby club
+      operationId: getHobbyClubById
+      
+      parameters:
+        - name: "id"
+          required: true
+          in: "path"
+          description: "Id of hobby club to return"
+          schema:
+            type: "integer"
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HobbyClub'
+        404:
+          description: "Hobby club not found"
+        500:
+          description: Internal server error
+          content: {}
+
+    patch:
+      summary: Update hobby club by id
+      description: Update an hobby club
+      operationId: updateHobbyClubById
+      
+      parameters:
+        - name: "id"
+          required: true
+          in: "path"
+          description: "Id of hobby club to update"
+          schema:
+            type: "integer"
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/HobbyClub'
+        404:
+          description: "Hobby club not found"
+        500:
+          description: Internal server error
+          content: {}
+
+    delete:
+      summary: Delete hobby club by id
+      description: Delete an hobby club by his id
+      operationId: deleteHobbyClubById
+      
+      parameters:
+        - name: "id"
+          required: true
+          in: "path"
+          description: "Id of hobby club to delete"
+          schema:
+            type: "integer"
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: boolean
+        404:
+          description: "Hobby club not found"
+          content:
+            application/json:
+              schema:
+                type: boolean
+        500:
+          description: Internal server error
+          content: {}
+  
+  /activity:
+    get:
+      summary: Get all activities
+      description: Returns all activities
+      operationId: getAllActivities
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        500:
+          description: Internal server error
+          content: {}
+
+  /activity/names:
+    get:
+      summary: Get all activities names
+      description: Returns all activities names
+      operationId: getAllActivitiesNames
+
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        500:
+          description: Internal server error
+          content: {}
+          
+components:
+  schemas:
+    HobbyClub: 
+      required:
+        - name
+        - description
+        - address
+        - activities
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        description: 
+          type: string
+        address: 
+          type: string
+        website: 
+          type: string
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+
+    HobbyClubPost:
+      required:
+        - name
+        - description
+        - address
+        - activities
+      type: object
+      properties:
+        name: 
+          type: string
+        description: 
+          type: string
+        address: 
+          type: string
+        website: 
+          type: string
+        activities:
+          type: array
+          items:
+            type: string
+
+    HobbyClubUpdate:
+      type: object
+      properties:
+        name: 
+          type: string
+        description: 
+          type: string
+        address: 
+          type: string
+        website: 
+          type: string
+        activities:
+          type: array
+          items:
+            type: string
+
+    HobbyClubWithWeather:
+      $ref: '#/components/schemas/HobbyClub'
+      type: object
+      properties:
+        weather:
+          $ref: '#/components/schemas/WeatherData'
+
+    HobbyClubWithWeatherPaginated:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/HobbyClubWithWeather'
+        count:
+          type: integer
+
+    HobbyClubPaginated:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/HobbyClub'
+        count:
+          type: integer
+
+    Activity: 
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+
+    WeatherData: 
+      type: object
+      properties:
+        main:
+          type: string
+        description: 
+          type: string
+
+    # Weather:
+    #   properties:
+    #     weather: 
+    #       $ref: '#/components/schemas/WeatherData'
+
+        
+        
+        
+  

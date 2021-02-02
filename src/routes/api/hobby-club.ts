@@ -88,14 +88,16 @@ routes.post('/', async (req: Request, res: Response) => {
 routes.patch('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id, 10);
-        let updateResult: UpdateResult = null;
+        let updateResult: boolean = null;
         const potentialHobbyClub = await HobbyClubController.findOne(id);
 
         if (!potentialHobbyClub) {
             res.status(404).send({ message: 'Hobby club was not found. Impossible to update.' });
         } else if (!req.body.activities) {
             updateResult = await HobbyClubController.update(id, req.body);
-            res.status(200).send(updateResult);
+
+            if (updateResult) res.status(200).send(updateResult);
+            else res.status(404).send('Hobby club was not found');
         } else {
             // Delete and recreate (because of the relation not handled by type-orm)
             await HobbyClubController.delete(id);
@@ -114,9 +116,10 @@ routes.patch('/:id', async (req: Request, res: Response) => {
 routes.delete('/:id', async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id, 10);
-        const result = await HobbyClubController.delete(id);
+        const deleteResult = await HobbyClubController.delete(id);
 
-        res.status(200).send(result);
+        if (deleteResult) res.status(200).send(deleteResult);
+        else res.status(404).send('Hobby club was not found');
     } catch (err) {
         res.status(500).send(err);
     }
